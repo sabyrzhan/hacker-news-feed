@@ -8,38 +8,36 @@ import os
 def get_client():
     config = Config(region_name=os.environ['AWS_REGION'])
     if 'LOCAL' in os.environ:
-        return boto3.client('dynamodb', endpoint_url='http://localhost:8000', config=config)
+        return boto3.resource('dynamodb', endpoint_url='http://localhost:8000', config=config)
     else:
-        return boto3.client('dynamodb')
+        return boto3.resource('dynamodb')
 
 def process_response(ids, type):
     for i in range(1,20):
         fetch_news_item(ids[i], type)
 
 def process_response_item(item, type):
-    id = str(item['id'])
+    id = item['id']
     title = item["title"]
     create_ts = int(item['time'])
     date_string = datetime.utcfromtimestamp(create_ts).strftime('%Y-%m-%d %H:%M:%S')
     url = item["url"] if "url" in item else "https://news.ycombinator.com/item?id={}".format(id)
-    existing = dynamodb.get_item(TableName='hacker_news', Key={'id': {'N': id}, 'type': {'S': type}})
+    table = dynamodb.Table('hacker_news')
+    existing = table.get_item(Key={'id': id, 'type': type})
     if "Item" not in existing:
         item = {}
     else:
         item = existing['Item']
 
-    item['id'] = {'N': id}
-    item['title'] = {'S': title}
-    item['date_string'] = {'S': date_string}
-    item['create_ts'] = {'N': str(create_ts)}
-    item['update_ts'] = {'N': str(int(time.time()))}
-    item['type'] = {'S': type}
-    item['url'] = {'S': url}
+    item['id'] = id
+    item['title'] = title
+    item['date_string'] = date_string
+    item['create_ts'] = create_ts
+    item['update_ts'] = int(time.time())
+    item['type'] = type
+    item['url'] = url
 
-    if int(id) == 29636863:
-        print(item)
-
-    dynamodb.put_item(TableName='hacker_news', Item=item)
+    table.put_item(Item=item)
 
 
 def fetch_news_item(id, type):
