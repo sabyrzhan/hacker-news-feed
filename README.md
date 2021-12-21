@@ -12,8 +12,8 @@ Send HackerNews as feed to user email at the end-of-the-day.
 ## Usage
 * Use `docker-compose.yml` to run local `dynamodb` and `dynamodb-admin`
 * Use `terraform` to create AWS resources and upload/update lambda function.
-  * `./terraform.sh <terraform parameters>`
-
+  * `./terraform.sh -chdir=<folder_name> <terraform parameters>`
+  
 ## Resources
 * Local DynamoDB: https://github.com/aws-samples/aws-sam-java-rest
 * DynamoDB admin panel: https://github.com/aaronshaf/dynamodb-admin

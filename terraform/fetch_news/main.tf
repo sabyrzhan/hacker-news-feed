@@ -17,14 +17,19 @@ provider "aws" {
   region = "us-east-1"
 }
 
+locals {
+  source_root = "${path.module}/../.."
+  site_packages_root = "${local.source_root}/venv/tmp/python/site-packages"
+}
+
 data "archive_file" "mainzip" {
   type = "zip"
-  source_dir = "${path.module}/../venv/tmp/python/site-packages"
-  output_path = "${path.module}/../main.zip"
+  source_dir = local.site_packages_root
+  output_path = "${local.source_root}/main.zip"
 }
 
 resource "aws_lambda_function" "fetch_news_function" {
-  filename = "${path.module}/../main.zip"
+  filename = "${local.source_root}/main.zip"
   function_name = "main_function"
   role = aws_iam_role.hacker_news_lambda_role.arn
   handler = "main_function.aws_fetch_news_function"
@@ -49,6 +54,21 @@ resource "aws_dynamodb_table" "hacker_news_table" {
   attribute {
     name = "type"
     type = "S"
+  }
+
+  attribute {
+    name = "update_ts"
+    type = "N"
+  }
+
+  global_secondary_index {
+    hash_key        = "type"
+    range_key       = "update_ts"
+    name            = "recently_updated_gsi"
+    projection_type = "INCLUDE"
+    non_key_attributes = ["id"]
+    read_capacity = 5
+    write_capacity = 5
   }
 }
 

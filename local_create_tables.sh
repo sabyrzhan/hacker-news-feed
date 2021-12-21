@@ -35,10 +35,29 @@ do_create_table() {
     --attribute-definitions \
         AttributeName=id,AttributeType=N \
         AttributeName=type,AttributeType=S \
+        AttributeName=update_ts,AttributeType=N \
     --key-schema \
         AttributeName=id,KeyType=HASH \
         AttributeName=type,KeyType=RANGE \
     --billing-mode PAY_PER_REQUEST \
+    --global-secondary-indexes \
+        "[
+            {
+                \"IndexName\": \"recently_updated_gsi\",
+                \"KeySchema\": [
+                    {\"AttributeName\":\"type\",\"KeyType\":\"HASH\"},
+                    {\"AttributeName\":\"update_ts\",\"KeyType\":\"RANGE\"}
+                ],
+                \"Projection\": {
+                    \"ProjectionType\":\"INCLUDE\",
+                    \"NonKeyAttributes\":[\"id\"]
+                },
+                \"ProvisionedThroughput\": {
+                    \"ReadCapacityUnits\": 5,
+                    \"WriteCapacityUnits\": 5
+                }
+            }
+        ]" \
     --endpoint-url http://localhost:8000
 }
 
