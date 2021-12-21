@@ -1,0 +1,17 @@
+version: "3"
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - 8000:8000
+  dynamodb_admin:
+    image: aaronshaf/dynamodb-admin
+    ports:
+      - 8001:8001
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_REGION=local
+    depends_on:
+      - dynamodb
