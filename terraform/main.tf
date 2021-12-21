@@ -19,7 +19,7 @@ provider "aws" {
 
 data "archive_file" "mainzip" {
   type = "zip"
-  source_dir = "${path.module}/../venv/lib/python3.9/site-packages"
+  source_dir = "${path.module}/../venv/tmp/python/site-packages"
   output_path = "${path.module}/../main.zip"
 }
 
