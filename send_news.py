@@ -82,7 +82,7 @@ def send_telegram_message():
            newstories_html)
 
     request_data = {
-        "chat_id" : "-1001766264771",
+        "chat_id" : TELEGRAM_TARGET_CHAT_ID,
         "parse_mode": "html",
         "text": text,
         "disable_web_page_preview": True
