@@ -33,3 +33,6 @@ message to channel where user was added. To achieve this:
 * Schedule Lambda task with EventBridge:
 https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-run-lambda-schedule.html
 * AWS Lambda runtimes: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
+* Regarding message sending in Telegram Bot:
+  * https://stackoverflow.com/questions/41174831/telegram-bot-chat-not-found
+  * https://medium.com/javarevisited/sending-a-message-to-a-telegram-channel-the-easy-way-eb0a0b32968
