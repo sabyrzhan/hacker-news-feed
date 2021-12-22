@@ -1,7 +1,17 @@
-# 📝 👨‍💻 📰 Subscribe to HackerNews Feed
+# 📝 👨‍💻 📰 Subscribe to HackerNews Feed using Telegram Bot
 
 ## About
-Send HackerNews as feed to user email at the end-of-the-day.
+Send HackerNews feed as Telegram message to user at the end-of-the-day.
+
+## The flow
+Because Telegram bot naturally is unable to send message to user directly, we can use channel so the bot will send 
+message to channel where user was added. To achieve this:
+1. Create telegram bot
+2. Create private channel and add telegram bot as administrator
+3. Set Telegram token in `.env` file
+4. Send test message to bot from channel in Telegram
+5. Execute `get_tg_me()` method in `send_news.py`. From response get `chat_id` of your channel.
+6. Set chat_id as target chat id in `.env` file
 
 ## Requirements
 * AWS account
@@ -13,6 +23,7 @@ Send HackerNews as feed to user email at the end-of-the-day.
 * Use `docker-compose.yml` to run local `dynamodb` and `dynamodb-admin`
 * Use `terraform` to create AWS resources and upload/update lambda function.
   * `./terraform.sh -chdir=<folder_name> <terraform parameters>`
+* Set environment variables by copying `.env.example` to `.env` file and setting env variable values
   
 ## Resources
 * Local DynamoDB: https://github.com/aws-samples/aws-sam-java-rest
