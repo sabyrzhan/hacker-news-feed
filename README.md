@@ -42,3 +42,8 @@ https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-run-lambda-schedule.
 * Regarding message sending in Telegram Bot:
   * https://stackoverflow.com/questions/41174831/telegram-bot-chat-not-found
   * https://medium.com/javarevisited/sending-a-message-to-a-telegram-channel-the-easy-way-eb0a0b32968
+* AWS Secret Manager:
+  * https://docs.aws.amazon.com/mediaconnect/latest/ug/iam-policy-examples-asm-secrets.html
+  * https://stackoverflow.com/questions/51537795/accessdenied-on-dynamodb-gsi-index
+  * https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/iam-policy-specific-table-indexes.html
+  * https://aws.amazon.com/blogs/security/how-to-securely-provide-database-credentials-to-lambda-functions-by-using-aws-secrets-manager/
