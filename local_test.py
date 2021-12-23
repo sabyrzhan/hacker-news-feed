@@ -5,4 +5,4 @@
 
 import send_news
 
-send_news.send_telegram_message()
+send_news.get_tg_updates()

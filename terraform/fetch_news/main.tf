@@ -30,9 +30,9 @@ data "archive_file" "mainzip" {
 
 resource "aws_lambda_function" "fetch_news_function" {
   filename = "${local.source_root}/main.zip"
-  function_name = "main_function"
+  function_name = "fetch_news"
   role = aws_iam_role.hacker_news_lambda_role.arn
-  handler = "main_function.aws_fetch_news_function"
+  handler = "fetch_news.aws_fetch_news_function"
   runtime = "python3.9"
   source_code_hash = "data.archive_file.mainzip.output_base64sha256"
   timeout = 120
@@ -90,7 +90,10 @@ resource "aws_iam_role_policy" "access_table_policy" {
         "dynamodb:PutItem",
         "dynamodb:UpdateItem"
       ],
-      "Resource": "${aws_dynamodb_table.hacker_news_table.arn}"
+      "Resource": [
+        "${aws_dynamodb_table.hacker_news_table.arn}",
+        "${aws_dynamodb_table.hacker_news_table.arn}/index/*"
+      ]
    }
   ]
 }

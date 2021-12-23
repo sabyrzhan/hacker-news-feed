@@ -1,19 +1,38 @@
-from datetime import datetime
-import time
-
-import main_function
-import requests
 import json
 import os
+import time
+from datetime import datetime
 
-TELEGRAM_TOKEN = "SPECIFY_TOKEN"
+import boto3
+import requests
+
 TELEGRAM_TARGET_CHAT_ID = "SPECIFY_TARGET_CHAT_ID"
-
-if "TELEGRAM_TOKEN" in os.environ:
-    TELEGRAM_TOKEN = os.environ["TELEGRAM_TOKEN"]
 
 if "TELEGRAM_TARGET_CHAT_ID" in os.environ:
     TELEGRAM_TARGET_CHAT_ID = os.environ["TELEGRAM_TARGET_CHAT_ID"]
+
+
+def get_tg_token():
+    if "LOCAL" not in os.environ:
+        session = boto3.session.Session()
+        client = session.client(
+            service_name="secretsmanager",
+            region_name="us-east-1"
+        )
+        get_secret_value_response = client.get_secret_value(
+            SecretId="TelegramSecrets"
+        )
+
+        secret = get_secret_value_response['SecretString']
+        j = json.loads(secret)
+        token = j['TELEGRAM_TOKEN']
+    else:
+        if "TELEGRAM_TOKEN" in os.environ:
+            token = os.environ["TELEGRAM_TOKEN"]
+        else:
+            token = "SPECIFY_TOKEN"
+
+    return token
 
 
 def query_latest_news(type):
@@ -34,7 +53,7 @@ def query_latest_news(type):
 
 
 def build_tg_url(method):
-    return "https://api.telegram.org/bot{}/{}".format(TELEGRAM_TOKEN, method)
+    return "https://api.telegram.org/bot{}/{}".format(get_tg_token(), method)
 
 
 def get_tg_me():
@@ -101,6 +120,10 @@ def prepare_news_message_html(messages):
         """.format(message['url'], message['title'])
         html += text
     return html
+
+
+def aws_send_news(event, context):
+    send_telegram_message()
 
 
 dynamodb = main_function.get_client()

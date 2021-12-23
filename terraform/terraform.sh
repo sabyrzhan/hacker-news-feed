@@ -5,6 +5,7 @@ if [ -d ../venv/tmp/python ]; then
 fi
 mkdir -p ../venv/tmp/python/
 cp -R ../venv/lib/python*/ ../venv/tmp/python/
-cp ../main_function.py ../venv/tmp/python/site-packages/
+cp ../fetch_news.py ../venv/tmp/python/site-packages/
+cp ../send_news.py ../venv/tmp/python/site-packages/
 
 terraform $@
