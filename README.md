@@ -20,6 +20,8 @@ message to channel where user was added. To achieve this:
 * Terraform (to provision AWS resources)
 
 ## Usage
+* Create `venv` with `python -m venv`
+* Install requirements with `pip3 install -r requirements.txt`
 * Use `docker-compose.yml` to run local `dynamodb` and `dynamodb-admin`
 * Use `terraform` to create AWS resources and upload/update lambda function.
   * `./terraform.sh -chdir=<folder_name> <terraform parameters>`
