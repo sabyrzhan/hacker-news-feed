@@ -20,6 +20,7 @@ provider "aws" {
 locals {
   source_root = "${path.module}/../.."
   site_packages_root = "${local.source_root}/venv/tmp/python/site-packages"
+  telegram_target_chat_id = "-1001766264771"
 }
 
 data "archive_file" "mainzip" {
@@ -47,7 +48,7 @@ resource "aws_lambda_function" "send_news_function" {
 
   environment {
     variables = {
-      TELEGRAM_TARGET_CHAT_ID = "-1001766264771"
+      TELEGRAM_TARGET_CHAT_ID = local.telegram_target_chat_id
     }
   }
 }
@@ -63,7 +64,7 @@ resource "aws_lambda_permission" "add_permission_to_fetch_news_function" {
 resource "aws_cloudwatch_event_rule" "send_news_rule" {
   name        = "send_news_rule"
   description = "send news rule (includes top, best and new)"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = "cron(0 9,16,22,4 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "send_news_target" {

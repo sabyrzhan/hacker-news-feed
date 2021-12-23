@@ -131,7 +131,7 @@ resource "aws_lambda_permission" "add_permission_to_fetch_news_function" {
 resource "aws_cloudwatch_event_rule" "fetch_news_rule" {
   name        = "fetch_news_rule"
   description = "fetch_news rule (includes top, best and new)"
-  schedule_expression = "rate(10 minutes)"
+  schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "fetch_news_target" {

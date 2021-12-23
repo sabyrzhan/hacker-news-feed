@@ -6,6 +6,8 @@ from datetime import datetime
 import boto3
 import requests
 
+import fetch_news
+
 TELEGRAM_TARGET_CHAT_ID = "SPECIFY_TARGET_CHAT_ID"
 
 if "TELEGRAM_TARGET_CHAT_ID" in os.environ:
@@ -126,4 +128,4 @@ def aws_send_news(event, context):
     send_telegram_message()
 
 
-dynamodb = main_function.get_client()
+dynamodb = fetch_news.get_client()

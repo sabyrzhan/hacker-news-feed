@@ -10,8 +10,8 @@ message to channel where user was added. To achieve this:
 2. Create private channel and add telegram bot as administrator
 3. Set Telegram token in `.env` file
 4. Send test message to bot from channel in Telegram
-5. Execute `get_tg_me()` method in `send_news.py`. From response get `chat_id` of your channel.
-6. Set chat_id as target chat id in `.env` file
+5. Execute `get_tg_updates()` method in `send_news.py`. From response get `chat_id` of your channel.
+6. Set chat_id as target chat id in `.env` and `terraform/main.tf` files
 
 ## Requirements
 * AWS account
@@ -23,7 +23,13 @@ message to channel where user was added. To achieve this:
 * Use `docker-compose.yml` to run local `dynamodb` and `dynamodb-admin`
 * Use `terraform` to create AWS resources and upload/update lambda function.
   * `./terraform.sh -chdir=<folder_name> <terraform parameters>`
-* Set environment variables by copying `.env.example` to `.env` file and setting env variable values
+* For local development - set environment variables by copying `.env.example` to `.env` file and 
+setting env variable values. On AWS environment - AWS Secret Manager is used to store the same variables.
+
+## Secrets on AWS Secret Manager
+1. Goto Secret Manager in Console
+2. Add variables from `.env` file
+3. Name the secret `TelegramSecrets`
   
 ## Resources
 * Local DynamoDB: https://github.com/aws-samples/aws-sam-java-rest
