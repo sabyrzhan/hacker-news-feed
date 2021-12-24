@@ -37,7 +37,7 @@ def get_tg_token():
     return token
 
 
-def query_latest_news(type):
+def query_latest_news(type, limit=10):
     table = dynamodb.Table('hacker_news')
     response = table.query(IndexName='recently_updated_gsi',
                            ExpressionAttributeValues={':type': type},
@@ -45,7 +45,7 @@ def query_latest_news(type):
                            ExpressionAttributeNames={
                              "#col_type": "type"
                            },
-                           Limit=10,
+                           Limit=limit,
                            ScanIndexForward=False)
     result = []
     for i in response['Items']:
@@ -79,8 +79,8 @@ def get_tg_updates():
 def send_telegram_message():
     url = build_tg_url("sendMessage")
 
-    topstories_html = prepare_news_message_html(query_latest_news('topstories'))
-    newstories_html = prepare_news_message_html(query_latest_news('newstories'))
+    topstories_html = prepare_news_message_html(query_latest_news('topstories', limit=20))
+    newstories_html = prepare_news_message_html(query_latest_news('newstories', limit=20))
     beststories_html = prepare_news_message_html(query_latest_news('beststories'))
 
     text = """
