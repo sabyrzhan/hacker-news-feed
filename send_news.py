@@ -79,8 +79,8 @@ def get_tg_updates():
 def send_telegram_message():
     url = build_tg_url("sendMessage")
 
-    topstories_html = prepare_news_message_html(query_latest_news('topstories', limit=20))
-    newstories_html = prepare_news_message_html(query_latest_news('newstories', limit=20))
+    topstories_html = prepare_news_message_html(query_latest_news('topstories', limit=30))
+    newstories_html = prepare_news_message_html(query_latest_news('newstories', limit=30))
     beststories_html = prepare_news_message_html(query_latest_news('beststories'))
 
     text = """
