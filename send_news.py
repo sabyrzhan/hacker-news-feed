@@ -76,9 +76,7 @@ def get_tg_updates():
     return
 
 
-def send_telegram_message():
-    url = build_tg_url("sendMessage")
-
+def send_telegram_messages():
     topstories_html = prepare_news_message_html(query_latest_news('topstories', limit=30))
     newstories_html = prepare_news_message_html(query_latest_news('newstories', limit=30))
     beststories_html = prepare_news_message_html(query_latest_news('beststories'))
@@ -89,21 +87,29 @@ def send_telegram_message():
 <b>Top stories</b>
 ==================
 {}
+""".format(datetime.utcfromtimestamp(time.time()).strftime('%d.%m.%Y'),
+           topstories_html)
+    send_telegram_message(text)
 
+    text = """
 <b>Best stories</b>
 ==================
 {}
+    """.format(beststories_html)
+    send_telegram_message(text)
 
+    text = """
 <b>New stories</b>
 ==================
 {}
-""".format(datetime.utcfromtimestamp(time.time()).strftime('%d.%m.%Y'),
-           topstories_html,
-           beststories_html,
-           newstories_html)
+    """.format(newstories_html)
+    send_telegram_message(text)
 
+
+def send_telegram_message(text):
+    url = build_tg_url("sendMessage")
     request_data = {
-        "chat_id" : TELEGRAM_TARGET_CHAT_ID,
+        "chat_id": TELEGRAM_TARGET_CHAT_ID,
         "parse_mode": "html",
         "text": text,
         "disable_web_page_preview": True
@@ -125,7 +131,7 @@ def prepare_news_message_html(messages):
 
 
 def aws_send_news(event, context):
-    send_telegram_message()
+    send_telegram_messages()
 
 
 dynamodb = fetch_news.get_client()
