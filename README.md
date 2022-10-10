@@ -18,6 +18,7 @@ message to channel where user was added. To achieve this:
 * Python 3 (dependencies are in `requiremenets.txt`)
 * Docker (to run local `dynamodb`)
 * Terraform (to provision AWS resources)
+* AWS SAM CLI ([Install](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-mac.html))
 
 ## Usage
 * Create `venv` with `python -m venv`
@@ -27,6 +28,16 @@ message to channel where user was added. To achieve this:
   * `./terraform.sh -chdir=<folder_name> <terraform parameters>`
 * For local development - set environment variables by copying `.env.example` to `.env` file and 
 setting env variable values. On AWS environment - AWS Secret Manager is used to store the same variables.
+* For local development with AWS SAM in Jetbrains IDEA:
+  * In Preferences -> Tools -> AWS -> SAM CLI executable: `/opt/homebrew/bin/sam`
+  * Create configurations AWS Lambda -> Local
+  * Specify:
+    * Runtime: for example `python3.8`
+    * Architecture: for example `arm64`
+    * Handler: for example: `news_api.aws_fetch_news`
+    * Timeout: for example, `300`
+    * Memory: for example, `512`
+    * Text: Event template `AWS API Gateway AWS Proxy`
 
 ## Secrets on AWS Secret Manager
 1. Goto Secret Manager in Console

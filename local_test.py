@@ -1,8 +1,7 @@
-# import main_function
-# main_function.fetch_top_news()
-# main_function.fetch_best_news()
-# main_function.fetch_new_news()
+import news_api
 
-import send_news
-
-send_news.get_tg_updates()
+event = {
+    'type': 'newstories',
+    'page': 10
+}
+news_api.aws_fetch_news(event, None)

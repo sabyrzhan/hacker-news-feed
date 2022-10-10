@@ -37,7 +37,7 @@ def get_tg_token():
     return token
 
 
-def query_latest_news(type, limit=10):
+def query_latest_news(type, limit=10, page=1):
     table = dynamodb.Table('hacker_news')
     response = table.query(IndexName='recently_updated_gsi',
                            ExpressionAttributeValues={':type': type},
