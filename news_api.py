@@ -1,9 +1,9 @@
 import fetch_news
-from send_news import query_latest_news
+from send_news import query_latest_news, query_latest_news_pagination
 
 
 def fetch_news_from_db(type, page):
-    news = query_latest_news(type)
+    news = query_latest_news_pagination(type, page=page)
     return news
 
 

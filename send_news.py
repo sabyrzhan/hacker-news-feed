@@ -53,6 +53,32 @@ def query_latest_news(type, limit=10, page=1):
         result.append(item['Item'])
     return result
 
+def query_latest_news_pagination(type, limit=10, page=None):
+    table = dynamodb.Table('hacker_news')
+    query_params = {
+        'IndexName': 'recently_updated_gsi',
+        'ExpressionAttributeValues': {':type': type},
+        'KeyConditionExpression': '#col_type = :type',
+        'ExpressionAttributeNames':  {
+            "#col_type": "type"
+        },
+        'Limit': limit,
+        'ScanIndexForward': False
+    }
+
+    if page is not None:
+        query_params['ExclusiveStartKey'] = page
+
+    response = table.query(**query_params)
+    result = {
+        "page": response['LastEvaluatedKey'],
+        "items": []
+    }
+    for i in response['Items']:
+        item = table.get_item(Key={'id': i['id'], 'type': i['type']})
+        result['items'].append(item['Item'])
+    return result
+
 
 def build_tg_url(method):
     return "https://api.telegram.org/bot{}/{}".format(get_tg_token(), method)
