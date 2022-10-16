@@ -5,7 +5,7 @@ from send_news import query_latest_news, query_latest_news_pagination
 
 
 def fetch_news_from_db(type, page):
-    news = query_latest_news_pagination(type, page=page)
+    news = query_latest_news_pagination(type, limit=30, page=page)
     return news
 
 def decode64_string(base64_string):
