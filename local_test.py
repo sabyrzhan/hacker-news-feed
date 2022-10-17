@@ -1,7 +1,12 @@
 import news_api
+import simplejson
 
-event = {
-    'type': 'newstories',
-    'page': 10
+body = {
+    'id': 1,
+    'type': 'test'
 }
-news_api.aws_fetch_news(event, None)
+event = {
+    'body': simplejson.dumps(body)
+}
+result = news_api.aws_add_fav(event, None)
+print(result)

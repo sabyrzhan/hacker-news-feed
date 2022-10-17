@@ -42,6 +42,16 @@ resource "aws_lambda_function" "news_api_function" {
   timeout = 120
 }
 
+resource "aws_lambda_function" "news_api_fav_function" {
+  filename = "${local.source_root}/main.zip"
+  function_name = "news_api_fav"
+  role = data.aws_iam_role.hacker_news_lambda_role.arn
+  handler = "news_api.aws_add_fav"
+  runtime = "python3.9"
+  source_code_hash = "data.archive_file.mainzip.output_base64sha256"
+  timeout = 120
+}
+
 data "aws_dynamodb_table" "hacker_news_table" {
   name = "hacker_news"
 }

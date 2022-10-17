@@ -17,7 +17,7 @@ do_add() {
   aws dynamodb put-item \
     --table-name 'hacker_news'  \
     --item \
-        '{"id": {"N": "1"}, "type": {"S": "test"}}' \
+        '{"id": {"N": "1"}, "type": {"S": "test"}, "title": {"S": "Some title"}, "date_string": {"S": "2022-10-22"}, "create_ts": {"N": "123131321"}, "url": {"S": "https://some-url"}}' \
     --endpoint-url http://localhost:8000
 }
 
@@ -61,6 +61,37 @@ do_create_table() {
     --endpoint-url http://localhost:8000
 }
 
+do_create_favorites_table() {
+    echo "Creating table:"
+    aws dynamodb \
+        create-table --table-name hacker_news_favs  \
+        --attribute-definitions \
+        AttributeName=id,AttributeType=N \
+        AttributeName=update_ts,AttributeType=N \
+        --key-schema \
+        AttributeName=id,KeyType=HASH \
+        --billing-mode PAY_PER_REQUEST \
+        --global-secondary-indexes \
+            "[
+                {
+                    \"IndexName\": \"hacker_news_favs_gsi\",
+                    \"KeySchema\": [
+                        {\"AttributeName\":\"id\",\"KeyType\":\"HASH\"},
+                        {\"AttributeName\":\"update_ts\",\"KeyType\":\"RANGE\"}
+                    ],
+                    \"Projection\": {
+                        \"ProjectionType\":\"INCLUDE\",
+                        \"NonKeyAttributes\":[\"id\"]
+                    },
+                    \"ProvisionedThroughput\": {
+                        \"ReadCapacityUnits\": 5,
+                        \"WriteCapacityUnits\": 5
+                    }
+                }
+            ]" \
+        --endpoint-url http://localhost:8000
+}
+
 do_list_tables() {
     echo "Listing tables:"
     aws dynamodb \
@@ -71,7 +102,7 @@ do_list_tables() {
 do_delete() {
   echo "Deleting item:"
   aws dynamodb delete-item --table-name hacker_news  \
-    --key '{"id": {"N": "1"}}' \
+    --key '{"id": {"N": "1"}, "type": {"S": "test"}}' \
     --endpoint-url http://localhost:8000
 }
 
@@ -113,6 +144,9 @@ case $ACTION in
   ;;
   "create")
     do_create_table
+  ;;
+  "createfav")
+    do_create_favorites_table
   ;;
   "list")
     do_list_tables

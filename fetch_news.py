@@ -44,6 +44,29 @@ def process_response_item(item, type):
     table.put_item(Item=item)
 
 
+def set_item_fav(post_id, type):
+    table = dynamodb.Table('hacker_news')
+    existing = table.get_item(Key={'id': post_id, 'type': type})
+    if "Item" not in existing:
+        print("Item does not exist")
+        return None
+
+    existing = existing['Item']
+
+    item = {}
+    item['id'] = post_id
+    item['title'] = existing['title']
+    item['date_string'] = existing['date_string']
+    item['create_ts'] = existing['create_ts']
+    item['update_ts'] = int(time.time())
+    item['type'] = type
+    item['url'] = existing['url']
+
+    table.put_item(Item=item)
+
+    return item
+
+
 def fetch_news_item(id, type):
     url = "https://hacker-news.firebaseio.com/v0/item/{}.json?print=pretty".format(id)
     response = requests.get(url)
