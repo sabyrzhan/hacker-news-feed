@@ -59,6 +59,9 @@ def set_item_fav(post_id, type):
 
     existing = existing['Item']
 
+    existing['is_fav'] = True
+    table.put_item(Item=existing)
+
     table = dynamodb.Table('hacker_news_favs')
     item = {}
     item['id'] = post_id
