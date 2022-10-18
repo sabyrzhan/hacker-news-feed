@@ -43,6 +43,9 @@ def aws_add_fav(event, context):
     if type == '':
         return {
             "statusCode": 400,
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "body": '{"message": "type not specified"}'
         }
 
@@ -50,11 +53,17 @@ def aws_add_fav(event, context):
     if added_item is None:
         return {
             "statusCode": 404,
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "body": '{"message": "Item not found"}'
         }
     else:
         return {
             "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json"
+            },
             "body": simplejson.dumps(added_item)
         }
 
@@ -72,5 +81,27 @@ def aws_fetch_news(event, context):
 
     return {
         "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": simplejson.dumps(news)
+    }
+
+def aws_fetch_favs(event, context):
+    params = event['queryStringParameters'] if event is not None and 'queryStringParameters' in event else {}
+    page = params['page'] if params is not None and 'page' in params else None
+    if page is not None and page != '':
+        page = decode64_string(page)
+        page = simplejson.loads(page)
+
+    news = send_news.query_favs_pagination(limit=30, page=page)
+    if news['page'] is not None:
+        news['page'] = encode64_string(news['page'])
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
         "body": simplejson.dumps(news)
     }

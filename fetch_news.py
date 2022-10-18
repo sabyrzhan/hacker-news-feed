@@ -45,6 +45,12 @@ def process_response_item(item, type):
 
 
 def set_item_fav(post_id, type):
+    table = dynamodb.Table('hacker_news_favs')
+    existing = table.get_item(Key={'id': post_id, 'type': 'fav'})
+    if "Item" in existing:
+        print("Item already exists")
+        return existing['Item']
+
     table = dynamodb.Table('hacker_news')
     existing = table.get_item(Key={'id': post_id, 'type': type})
     if "Item" not in existing:
@@ -53,13 +59,14 @@ def set_item_fav(post_id, type):
 
     existing = existing['Item']
 
+    table = dynamodb.Table('hacker_news_favs')
     item = {}
     item['id'] = post_id
     item['title'] = existing['title']
     item['date_string'] = existing['date_string']
     item['create_ts'] = existing['create_ts']
     item['update_ts'] = int(time.time())
-    item['type'] = type
+    item['type'] = 'fav'
     item['url'] = existing['url']
 
     table.put_item(Item=item)

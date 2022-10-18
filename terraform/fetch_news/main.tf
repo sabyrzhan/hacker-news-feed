@@ -38,42 +38,8 @@ resource "aws_lambda_function" "fetch_news_function" {
   timeout = 120
 }
 
-resource "aws_dynamodb_table" "hacker_news_table" {
-  name           = "hacker_news"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
-  hash_key       = "id"
-  range_key      = "type"
-
-  attribute {
-    name = "id"
-    type = "N"
-  }
-
-  attribute {
-    name = "type"
-    type = "S"
-  }
-
-  attribute {
-    name = "update_ts"
-    type = "N"
-  }
-
-  global_secondary_index {
-    hash_key        = "type"
-    range_key       = "update_ts"
-    name            = "recently_updated_gsi"
-    projection_type = "INCLUDE"
-    non_key_attributes = ["id"]
-    read_capacity = 5
-    write_capacity = 5
-  }
-}
-
-resource "aws_iam_role_policy" "access_table_policy" {
-  name = "access_table_policy"
+resource "aws_iam_role_policy" "access_hacker_news_table_policy" {
+  name = "access_hacker_news_table_policy"
   role = aws_iam_role.hacker_news_lambda_role.id
   policy = <<EOF
 {

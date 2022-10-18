@@ -52,8 +52,22 @@ resource "aws_lambda_function" "news_api_fav_function" {
   timeout = 120
 }
 
+resource "aws_lambda_function" "news_api_get_favs_function" {
+  filename = "${local.source_root}/main.zip"
+  function_name = "news_api_get_favs"
+  role = data.aws_iam_role.hacker_news_lambda_role.arn
+  handler = "news_api.aws_fetch_favs"
+  runtime = "python3.9"
+  source_code_hash = "data.archive_file.mainzip.output_base64sha256"
+  timeout = 120
+}
+
 data "aws_dynamodb_table" "hacker_news_table" {
   name = "hacker_news"
+}
+
+data "aws_dynamodb_table" "hacker_news_favs_table" {
+  name = "hacker_news_favs"
 }
 
 resource "aws_iam_role_policy" "access_table_policy" {
@@ -76,7 +90,9 @@ resource "aws_iam_role_policy" "access_table_policy" {
       ],
       "Resource": [
         "${data.aws_dynamodb_table.hacker_news_table.arn}",
-        "${data.aws_dynamodb_table.hacker_news_table.arn}/index/*"
+        "${data.aws_dynamodb_table.hacker_news_table.arn}/index/*",
+        "${data.aws_dynamodb_table.hacker_news_favs_table.arn}",
+        "${data.aws_dynamodb_table.hacker_news_favs_table.arn}/index/*"
       ]
    }
   ]

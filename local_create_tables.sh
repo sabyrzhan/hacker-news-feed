@@ -67,16 +67,18 @@ do_create_favorites_table() {
         create-table --table-name hacker_news_favs  \
         --attribute-definitions \
         AttributeName=id,AttributeType=N \
+        AttributeName=type,AttributeType=S \
         AttributeName=update_ts,AttributeType=N \
         --key-schema \
         AttributeName=id,KeyType=HASH \
+        AttributeName=type,KeyType=S \
         --billing-mode PAY_PER_REQUEST \
         --global-secondary-indexes \
             "[
                 {
                     \"IndexName\": \"hacker_news_favs_gsi\",
                     \"KeySchema\": [
-                        {\"AttributeName\":\"id\",\"KeyType\":\"HASH\"},
+                        {\"AttributeName\":\"type\",\"KeyType\":\"HASH\"},
                         {\"AttributeName\":\"update_ts\",\"KeyType\":\"RANGE\"}
                     ],
                     \"Projection\": {
@@ -111,6 +113,9 @@ do_delete_table() {
   aws dynamodb delete-table \
     --table-name 'hacker_news'  \
     --endpoint-url http://localhost:8000
+  aws dynamodb delete-table \
+      --table-name 'hacker_news_favs'  \
+      --endpoint-url http://localhost:8000
 }
 
 POSITIONAL=()
