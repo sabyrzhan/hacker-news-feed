@@ -64,7 +64,7 @@ resource "aws_lambda_permission" "add_permission_to_fetch_news_function" {
 resource "aws_cloudwatch_event_rule" "send_news_rule" {
   name        = "send_news_rule"
   description = "send news rule (includes top, best and new)"
-  schedule_expression = "cron(0 9,16,22,4 * * ? *)"
+  schedule_expression = "cron(0 4,16 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "send_news_target" {
